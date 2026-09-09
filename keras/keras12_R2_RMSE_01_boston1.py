@@ -1,29 +1,29 @@
 # 9/3
-from sklearn.metrics import r2_score, root_mean_squared_error, mean_squared_error
 import numpy as np
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
+from sklearn.metrics import mean_squared_error, r2_score, root_mean_squared_error
 from tensorflow.keras.datasets import boston_housing
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.models import Sequential
 
-#1. 데이터
+# 1. 데이터
 (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
 
 print(x_train.shape, y_train.shape)
 print(x_test.shape, y_test.shape)
 
 
-#2. 모델 설정
+# 2. 모델 설정
 model = Sequential()
-model.add(Dense(8,input_dim=13))
+model.add(Dense(8, input_dim=13))
 model.add(Dense(16))
 model.add(Dense(8))
 model.add(Dense(1))
 
-#3. 컴파일 훈련
+# 3. 컴파일 훈련
 model.compile(loss='mse', optimizer='adam')
 model.fit(x_train, y_train, epochs=100, batch_size=3)
-print("=============================================")
-#3. 결과 예측
+print('=============================================')
+# 3. 결과 예측
 loss = model.evaluate(x_test, y_test)
 y_pred = model.predict(x_test)
 # r2는 텐서플로우에서 지원해주지 않는 지표 그렇게 때문에 사이킷런에서 임포트한다
@@ -37,8 +37,10 @@ mse = mean_squared_error(y_test, y_pred)
 
 rmse = root_mean_squared_error(y_test, y_pred)
 
+
 def RMSE(y_test, y_pred):
     return np.sqrt(mean_squared_error(y_test, y_pred))
+
 
 print(loss, r2, mse, rmse, RMSE(y_test, y_pred))
 

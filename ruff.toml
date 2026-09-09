@@ -1,0 +1,24 @@
+# Ruff — 린트 + 포매터 (ESLint + Prettier 역할을 하나로)
+#   ruff check .          검사
+#   ruff check --fix .    자동 수정
+#   ruff format .         포맷
+
+line-length = 100          # 기본 88은 텐서 코드에 좁아서 ML에서는 보통 100~120
+target-version = "py311"
+
+[lint]
+select = [
+    "F",    # pyflakes  — 미정의 변수(F821), 미사용 임포트(F401) 등 실제 버그
+    "E",    # pycodestyle 오류
+    "W",    # pycodestyle 경고
+    "I",    # isort — 임포트 정렬
+]
+
+ignore = [
+    "E402",  # 임포트가 파일 중간에 오는 것 허용 (학습용 스크립트에서 흔함)
+    "E501",  # 긴 줄 허용 (주석으로 shape 설명을 붙이는 스타일)
+    "E741",  # l, I, O 같은 짧은 변수명 허용
+]
+
+[format]
+quote-style = "single"     # 기존 코드가 홑따옴표 위주라 맞춤

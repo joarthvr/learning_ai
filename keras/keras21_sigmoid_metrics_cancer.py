@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 import time
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.metrics import r2_score, mean_squared_error, root_mean_squared_error
-
+from sklearn.metrics import accuracy_score
 from sklearn.datasets import load_breast_cancer # 유방암 관련 데이터셋 불러오기
 
 # 1. 데이터
@@ -91,9 +91,6 @@ hist = model.fit(
 # 4. 결과 예측
 loss = model.evaluate(x_test, y_test)
 y_pred = model.predict(x_test)
-mse = mean_squared_error(y_test, y_pred)
-r2 = r2_score(y_test, y_pred)
-rmse = root_mean_squared_error(y_test, y_pred)
 
 ########################################
 print('loss: ', round(loss[0],4))
@@ -101,10 +98,5 @@ print('acc: ', round(loss[1],4))
 ########################################
 y_pred = np.round(y_pred) # 소수점으로 출력된 값을 반올림하여 0과 1로 변환
 print(y_pred[:10])
-from sklearn.metrics import accuracy_score
 acc_score = accuracy_score(y_test, y_pred)
 print('accuracy_score: ', acc_score)
-
-print('mse: ', mse)
-print('r2: ', r2)
-print('rmse: ', rmse)

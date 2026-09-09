@@ -1,0 +1,12 @@
+# 실습 환경 (conda env: py311 / Python 3.11.0)
+#   conda create -n py311 python=3.11
+#   pip install -r requirements.txt
+tensorflow==2.21.0
+numpy==2.4.6
+pandas==3.0.5
+scikit-learn==1.9.0
+matplotlib==3.11.1
+scipy==1.17.1
+
+# 개발 도구
+ruff==0.16.6

@@ -1,4 +1,20 @@
+# ── 데이터 / 산출물 (용량 커서 깃에 올리지 않음) ──
 _data
 docs
+
+# ── 파이썬 ──
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# ── 학습 산출물 ──
+# _save/ = ModelCheckpoint 가중치, logs/ = TensorBoard 로그
+_save/
+logs/
+*.h5
+*.keras
+*.weights.h5
+
+# ── 도구 캐시 / 에디터 ──
 .ruff_cache
 .vscode

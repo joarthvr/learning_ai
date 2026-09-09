@@ -1,2 +1,4 @@
 _data
 docs
+.ruff_cache
+.vscode

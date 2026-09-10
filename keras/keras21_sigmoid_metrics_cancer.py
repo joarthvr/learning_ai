@@ -93,3 +93,7 @@ y_pred = np.round(y_pred)  # 소수점으로 출력된 값을 반올림하여 0�
 print(y_pred[:10])
 acc_score = accuracy_score(y_test, y_pred)
 print('accuracy_score: ', acc_score)
+
+"""
+accuracy_score:  0.8947368421052632
+"""

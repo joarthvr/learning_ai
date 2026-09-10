@@ -1,6 +1,4 @@
 # https://www.kaggle.com/competitions/bike-sharing-demand/data
-import matplotlib as mpl
-import matplotlib.pyplot as plt
 import pandas as pd
 from sklearn.metrics import mean_squared_error, r2_score, root_mean_squared_error
 from sklearn.model_selection import train_test_split
@@ -76,17 +74,20 @@ print('R2: ', r2_score(y_test, model.predict(x_test)))
 print('RMSE: ', root_mean_squared_error(y_test, model.predict(x_test)))
 #######################################################################
 
-mpl.rcParams['font.family'] = 'Malgun Gothic'  # 윈도우 한글 폰트 (맑은 고딕)
-mpl.rcParams['axes.unicode_minus'] = False  # 마이너스 부호 깨짐 방지
+# mpl.rcParams['font.family'] = 'Malgun Gothic'  # 윈도우 한글 폰트 (맑은 고딕)
+# mpl.rcParams['axes.unicode_minus'] = False  # 마이너스 부호 깨짐 방지
 
-plt.figure(figsize=(9, 6))  # 그래프 사이즈 지정 figsize = (가로, 세로)
-plt.plot(hist.history['loss'][3:], marker='.', c='red', label='loss')
-plt.plot(hist.history['val_loss'][3:], marker='.', c='blue', label='val_loss')
-plt.legend(loc='upper right')  # 우측 상단에 라벨표시
-plt.title('캐글 바이크 loss')  # 제목 부여
-plt.xlabel('epochs')  # x축 이름 부여
-plt.ylabel('loss')  # y축 이름 부여
-plt.grid()  # 격자 표시 추가
-plt.show()  # 그래프 출력
+# plt.figure(figsize=(9, 6))  # 그래프 사이즈 지정 figsize = (가로, 세로)
+# plt.plot(hist.history['loss'][3:], marker='.', c='red', label='loss')
+# plt.plot(hist.history['val_loss'][3:], marker='.', c='blue', label='val_loss')
+# plt.legend(loc='upper right')  # 우측 상단에 라벨표시
+# plt.title('캐글 바이크 loss')  # 제목 부여
+# plt.xlabel('epochs')  # x축 이름 부여
+# plt.ylabel('loss')  # y축 이름 부여
+# plt.grid()  # 격자 표시 추가
+# plt.show()  # 그래프 출력
 
 # ===== RESULT =====
+"""
+RMSE:  150.11572265625
+"""

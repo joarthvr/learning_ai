@@ -1,50 +1,42 @@
 import time
 
 import numpy as np
-import pandas as pd
-from sklearn.datasets import load_digits
+from sklearn.datasets import load_breast_cancer
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.utils import set_random_seed
 
-# 목표: acc == 1.0
 # ======================================================================
-SEED = 42  # 난수 고정 (재현성) — 튜닝 대상 아님!
+SEED = 77
 
 # --- 데이터 ---
-TRAIN_SIZE = 0.7  # train / test 분할 비율
-VAL_SPLIT = 0.25  # train 중 검증에 쓸 비율
+TRAIN_SIZE = 0.7
+VAL_SPLIT = 0.3
 
 # --- 모델 ---
-HIDDEN_UNITS = [64, 32, 16]  # 은닉층 구조 (리스트 길이 = 층 수)
+HIDDEN_UNITS = [30, 36, 36, 36]
 ACTIVATION = 'relu'
 
 # --- 훈련 ---
 EPOCHS = 1000
-BATCH_SIZE = 72
-LEARNING_RATE = 0.001  # Adam 기본값
+BATCH_SIZE = 32
+LEARNING_RATE = 0.001
 PATIENCE = 20
+
+set_random_seed(SEED)
 # ======================================================================
 
-set_random_seed(SEED)  # python / numpy / tensorflow 난수를 한 번에 고정
-
-
 # 1. 데이터
-datasets = load_digits()
-
+datasets = load_breast_cancer()
 x = datasets.data
-y = pd.get_dummies(datasets.target, dtype='float32')
+y = datasets.target
 
-print(x.shape, y.shape)  # (1797, 64) (1797, 10)
-print(np.unique(datasets.target, return_counts=True))  # 0~9, 각 약 180개
-
-# 데이터에서 유도되는 값 — 하이퍼파라미터가 아니므로 위 블록에 두지 않는다
-INPUT_DIM = x.shape[1]  # 64 (8x8 이미지를 펼친 것)
-N_CLASSES = y.shape[1]  # 10
+INPUT_DIM = x.shape[1]  # 30
+OUTPUT_DIM = 1  # 이진분류: 출력 1개 + sigmoid
 
 x_train, x_test, y_train, y_test = train_test_split(
     x,
@@ -52,22 +44,24 @@ x_train, x_test, y_train, y_test = train_test_split(
     train_size=TRAIN_SIZE,
     random_state=SEED,
     shuffle=True,
-    stratify=y,
+    stratify=y,  # 클래스 비율 유지
 )
+
+# ======================================================================
+scaler = MinMaxScaler()
+x_train = scaler.fit_transform(x_train)
+x_test = scaler.transform(x_test)
+# ======================================================================
 
 # 2. 모델 구성
 model = Sequential()
 model.add(Input(shape=(INPUT_DIM,)))
 for units in HIDDEN_UNITS:
     model.add(Dense(units, activation=ACTIVATION))
-model.add(Dense(N_CLASSES, activation='softmax'))
+model.add(Dense(OUTPUT_DIM, activation='sigmoid'))
 
 # 3. 컴파일 훈련
-model.compile(
-    loss='categorical_crossentropy',
-    optimizer=Adam(learning_rate=LEARNING_RATE),
-    metrics=['acc'],
-)
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['acc'])
 
 es = EarlyStopping(
     monitor='val_loss',
@@ -77,24 +71,21 @@ es = EarlyStopping(
 )
 
 start_time = time.time()
-model.fit(
+hist = model.fit(
     x_train,
     y_train,
     epochs=EPOCHS,
     batch_size=BATCH_SIZE,
+    verbose=1,
     validation_split=VAL_SPLIT,
     callbacks=[es],
 )
 end_time = time.time()
 
-
-# 4. 평가 예측
-y_predict = np.argmax(model.predict(x_test), axis=-1)
-y_test_label = np.argmax(y_test, axis=-1)
-acc = accuracy_score(y_test_label, y_predict)
-
-train_acc = model.evaluate(x_train, y_train, verbose=0)[1]
-test_acc = model.evaluate(x_test, y_test, verbose=0)[1]
+# 4. 결과 예측
+y_prob = model.predict(x_test)
+y_predict = np.round(y_prob)  # 0.5 기준 -> 0 또는 1
+acc = accuracy_score(y_test, y_predict)
 
 ##################### 실험 결과 요약 (기록용) #####################
 structure = '-'.join(map(str, HIDDEN_UNITS))
@@ -102,22 +93,20 @@ stop_ep = es.stopped_epoch if es.stopped_epoch else 'ES미발동'
 took = end_time - start_time
 
 print('')
-print('===== RESUL =====')
+print('===== RESULT =====')
 print(
     f'| seed={SEED} | units={structure} | act={ACTIVATION} '
     f'| ts={TRAIN_SIZE} | vs={VAL_SPLIT} | bs={BATCH_SIZE} | ep={EPOCHS} '
     f'| lr={LEARNING_RATE} | pat={PATIENCE} '
-    f'|| train={train_acc:.4f} | test={test_acc:.4f} '
+    f'|| acc={acc:.4f} '
     f'| stop={stop_ep} | time={took:.1f}s |'
 )
 print('===================================')
 print('')
 
-
 """
-===== RESUL =====
-| seed=42 | units=64-32-16 | act=relu | ts=0.7 | vs=0.25 | bs=72 | ep=1000 | lr=0.001 | pat=20
-|| train=0.9897 | test=0.9574 | stop=87 | time=5.7s |
+===== RESULT =====
+| seed=77 | units=30-36-36-36 | act=relu | ts=0.7 | vs=0.3 | bs=32 | ep=1000 | lr=0.001 | pat=20
+|| acc=0.9649 | stop=41 | time=3.1s |
 ===================================
-
 """

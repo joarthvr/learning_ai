@@ -5,7 +5,7 @@ import pandas as pd
 from sklearn.datasets import load_wine
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MaxAbsScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Sequential
@@ -49,7 +49,8 @@ x_train, x_test, y_train, y_test = train_test_split(
 )
 
 # ======================================================================
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+scaler = MaxAbsScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 # ======================================================================
@@ -106,12 +107,17 @@ print('===================================')
 print('')
 
 """
-===== RESULT =====
+===== RESULT ===== minmax
 | seed=156 | units=64-32 | act=relu | ts=0.8 | vs=0.15 | bs=4 | ep=1000 | lr=0.001| pat=20
 || acc=0.9722 | stop=705 | time=48.0s |
 ===================================
-===== RESULT =====
+===== RESULT ===== minmax
 | seed=156 | units=64-32 | act=relu | ts=0.8 | vs=0.15 | bs=4 | ep=1000 | lr=0.001| pat=20
 || acc=0.9722 | stop=705 | time=47.3s |
+===================================
+
+===== RESULT ===== abs
+| seed=156 | units=64-32 | act=relu | ts=0.8 | vs=0.15 | bs=4 | ep=1000 | lr=0.001 | pat=20
+|| acc=0.9722 | stop=121 | time=8.6s |
 ===================================
 """

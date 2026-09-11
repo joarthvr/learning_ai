@@ -3,7 +3,7 @@ import time
 import pandas as pd
 from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Sequential
@@ -21,10 +21,10 @@ HIDDEN_UNITS = [64, 32, 16]
 ACTIVATION = 'relu'
 
 # --- 훈련 ---
-EPOCHS = 100
+EPOCHS = 1000
 BATCH_SIZE = 42
 LEARNING_RATE = 0.001
-PATIENCE = 15
+PATIENCE = 150
 
 set_random_seed(SEED)
 # ======================================================================
@@ -52,7 +52,9 @@ x_train, x_test, y_train, y_test = train_test_split(
 )
 
 # ======================================================================
-scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 # ======================================================================
@@ -107,8 +109,27 @@ print('===================================')
 print('')
 
 """
-===== RESULT =====
+===== RESULT ===== minmax
 | seed=77 | units=64-32-16 | act=relu | ts=0.7 | vs=0.15 | bs=42 | ep=100 | lr=0.001 | pat=15
 || rmse=151.1284| stop=ES미발동 | time=16.7ss |
 ===================================
+===== RESULT ===== standard
+| seed=77 | units=64-32-16 | act=relu | ts=0.7 | vs=0.15 | bs=42 | ep=100 | lr=0.001 | pat=15
+|| rmse=146.5817 | stop=93 | time=15.4s |
+===================================
+
+===== RESULT ===== standard
+| seed=77 | units=64-32-16 | act=relu | ts=0.7 | vs=0.15 | bs=42 | ep=1000 | lr=0.001| pat=500
+|| rmse=146.1622 | stop=ES미발동 | time=159.6s |
+===================================
+===== RESULT ===== abs
+| seed=77 | units=64-32-16 | act=relu | ts=0.7 | vs=0.15 | bs=42 | ep=1000 | lr=0.001| pat=500
+|| rmse=145.9032 | stop=ES미발동 | time=164.1s |
+===================================
+
+===== RESULT ===== abs
+| seed=77 | units=64-32-16 | act=relu | ts=0.7 | vs=0.15 | bs=42 | ep=1000 | lr=0.001| pat=150
+|| rmse=145.9032 | stop=ES미발동 | time=157.0s |
+===================================
+
 """

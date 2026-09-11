@@ -48,6 +48,7 @@ x_train, x_test, y_train, y_test = train_test_split(
 # ======================================================================
 # MinMaxScaler: (원값 - Min) / (Max - Min)  -> 모든 열을 0~1 로
 scaler = MinMaxScaler()
+# scaler = StandardScaler()
 # fit 은 train 에만! test 에 fit 하면 test 정보가 새어나감(데이터 누수)
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)  # train 에서 구한 Min/Max 를 그대로 적용
@@ -104,13 +105,24 @@ print('===================================')
 print('')
 
 """
-===== RESULT =====
+===== RESULT ===== // 민맥스
 | seed=42 | units=32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=32 | ep=1000
 | lr=0.001 | pat=20 || rmse=0.5555 | stop=199 | time=74.1s |
 ===================================
 
-===== RESULT =====
+===== RESULT ===== // 민맥스
 | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=16 | ep=1000
 | lr=0.001 | pat=20 || rmse=0.5673 | stop=71 | time=54.3s |
 ===================================
+
+===== RESULT ===== // 스탠다드
+| seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=16 | ep=1000 | lr=0.001 | pat=20
+|| rmse=0.5355 | stop=90 | time=63.8s |
+===================================
+
+===== RESULT ===== // abs
+| seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=16 | ep=1000 | lr=0.001 | pat=20
+|| rmse=0.6088 | stop=152 | time=109.4s |
+===================================
+
 """

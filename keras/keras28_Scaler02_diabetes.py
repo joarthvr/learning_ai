@@ -3,7 +3,7 @@ import time
 from sklearn.datasets import load_diabetes
 from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Sequential
@@ -46,7 +46,10 @@ x_train, x_test, y_train, y_test = train_test_split(
 )
 
 # ======================================================================
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)  # train 에서 구한 Min/Max 를 그대로 적용
 # ======================================================================
@@ -101,9 +104,21 @@ print('===================================')
 print('')
 
 """
-===== RESULT =====
+===== RESULT ===== // 민맥스
 | seed=153 | units=3-9-3 | act=relu | ts=0.8 | vs=0.2 | bs=10 | ep=100 | lr=0.001
 | pat=15 || rmse=58.3649 | stop=ES미발동 | time=7.5s |
+===================================
+===== RESULT ===== // 스탠다드
+| seed=153 | units=3-9-3 | act=relu | ts=0.8 | vs=0.2 | bs=10 | ep=100 | lr=0.001 | pat=15
+|| rmse=51.6952 | stop=ES미발동 | time=7.1s |
+===================================
+===== RESULT ===== //abs
+| seed=153 | units=3-9-3 | act=relu | ts=0.8 | vs=0.2 | bs=10 | ep=100 | lr=0.001 | pat=15
+|| rmse=50.3019 | stop=ES미발동 | time=7.1s |
+===================================
+===== RESULT ===== // robust
+| seed=153 | units=3-9-3 | act=relu | ts=0.8 | vs=0.2 | bs=10 | ep=100 | lr=0.001 | pat=15
+|| rmse=53.9068 | stop=ES미발동 | time=7.1s |
 ===================================
 
 """

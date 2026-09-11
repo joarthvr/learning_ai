@@ -1,7 +1,7 @@
 import time
 
 from sklearn.metrics import root_mean_squared_error
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.datasets import boston_housing
 from tensorflow.keras.layers import Dense, Input
@@ -21,7 +21,7 @@ ACTIVATION = 'relu'
 
 # --- 훈련 ---
 EPOCHS = 1000
-BATCH_SIZE = 8
+BATCH_SIZE = 4
 LEARNING_RATE = 0.001
 PATIENCE = 20
 # ======================================================================
@@ -30,7 +30,7 @@ PATIENCE = 20
 # rmse 차이를 '스케일링 효과'라고 말할 수 있다 (한 번에 하나만 바꾸기)
 CASES = [
     ('스케일링X', None),
-    ('MinMaxScaler', MinMaxScaler()),
+    ('RobustScaler', RobustScaler()),
 ]
 
 results = []
@@ -123,11 +123,36 @@ print('')
 
 """
 
-===== RESULT =====
+===== RESULT ===== // 민맥스
 | scaler=스케일링X        | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=8 |ep=1000 | lr=0.001 | pat=20
 || rmse=4.2200 | stop=143 | time=11.8s |
 | scaler=MinMaxScaler | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=8 | ep=1000 | lr=0.001 | pat=20
 || rmse=3.1154 | stop=489 | time=37.8s |
 -> rmse 4.2200 -> 3.1154  (+26.2%)
+===================================
+===== RESULT ===== // 스탠다드
+| scaler=스케일링X        | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=8 | ep=1000 | lr=0.001 | pat=20 || rmse=4.2200 | stop=143 | time=11.8s |
+| scaler=MinMaxScaler | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=8 | ep=1000 | lr=0.001 | pat=20 || rmse=3.9134 | stop=36 | time=3.5s |
+-> rmse 4.2200 -> 3.9134  (+7.3%)
+===================================
+===== RESULT ===== // abs
+| scaler=스케일링X        | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=8 | ep=1000 | lr=0.001 | pat=20 || rmse=4.2200 | stop=143 | time=11.5s |
+| scaler=MinMaxScaler | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=8 | ep=1000 | lr=0.001 | pat=20 || rmse=3.5218 | stop=339 | time=27.0s |
+-> rmse 4.2200 -> 3.5218  (+16.5%)
+===================================
+===== RESULT ===== // abs
+| scaler=스케일링X        | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=16 | ep=1000 | lr=0.001 | pat=20 || rmse=4.5315 | stop=184 | time=11.5s |
+| scaler=MinMaxScaler | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=16 | ep=1000 | lr=0.001 | pat=20 || rmse=3.3098 | stop=688 | time=41.7s |
+-> rmse 4.5315 -> 3.3098  (+27.0%)
+===================================
+===== RESULT ===== // abs
+| scaler=스케일링X        | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=32 | ep=1000 | lr=0.001 | pat=20 || rmse=5.4964 | stop=146 | time=8.3s |
+| scaler=MaxAbsScaler | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=32 | ep=1000 | lr=0.001 | pat=20 || rmse=3.7341 | stop=337 | time=18.1s |
+-> rmse 5.4964 -> 3.7341  (+32.1%)
+===================================
+===== RESULT ===== robust
+| scaler=스케일링X        | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=4 | ep=1000 | lr=0.001 | pat=20 || rmse=4.3209 | stop=124 | time=14.0s |
+| scaler=RobustScaler | seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=4 | ep=1000 | lr=0.001 | pat=20 || rmse=3.5447 | stop=44 | time=5.5s |
+-> rmse 4.3209 -> 3.5447  (+18.0%)
 ===================================
 """

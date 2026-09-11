@@ -3,7 +3,7 @@ import time
 from sklearn.datasets import fetch_california_housing
 from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Sequential
@@ -27,7 +27,7 @@ LEARNING_RATE = 0.001
 PATIENCE = 20
 
 set_random_seed(SEED)
-# =========================================ㄴ=============================
+# ======================================================================
 
 # 1. 데이터
 datasets = fetch_california_housing()
@@ -47,7 +47,9 @@ x_train, x_test, y_train, y_test = train_test_split(
 
 # ======================================================================
 # MinMaxScaler: (원값 - Min) / (Max - Min)  -> 모든 열을 0~1 로
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
 # fit 은 train 에만! test 에 fit 하면 test 정보가 새어나감(데이터 누수)
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)  # train 에서 구한 Min/Max 를 그대로 적용
@@ -104,5 +106,8 @@ print('===================================')
 print('')
 
 """
-
+===== RESULT ===== robust
+| seed=42 | units=64-32-16-8 | act=relu | ts=0.8 | vs=0.15 | bs=16 | ep=1000 | lr=0.001 | pat=20
+|| rmse=0.5304 | stop=74 | time=54.6s |
+===================================
 """

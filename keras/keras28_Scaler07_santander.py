@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score, roc_auc_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Sequential
@@ -53,7 +53,9 @@ x_train, x_test, y_train, y_test = train_test_split(
 )
 
 # ======================================================================
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+scaler = StandardScaler()
+# scaler = MaxAbsScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 # ======================================================================
@@ -114,8 +116,18 @@ print('')
 
 """
 
-===== RESULT =====
+===== RESULT ===== minmax
 | seed=42 | units=128-64-32-16 | act=relu | ts=0.8 | vs=0.15 | bs=2048 | ep=1000 | lr=0.001 | pat=20
 || acc=0.9136 | auc=0.8599 | stop=53 | time=14.7s |
+===================================
+
+===== RESULT ===== abs
+| seed=42 | units=128-64-32-16 | act=relu | ts=0.8 | vs=0.15 | bs=2048 | ep=1000 | lr=0.001 | pat=20
+|| acc=0.9105 | auc=0.8481 | stop=30 | time=8.8s |
+===================================
+
+===== RESULT ===== standard
+| seed=42 | units=128-64-32-16 | act=relu | ts=0.8 | vs=0.15 | bs=2048 | ep=1000 | lr=0.001 | pat=20
+|| acc=0.9082 | auc=0.8417 | stop=22 | time=6.5s |
 ===================================
 """

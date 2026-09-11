@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.datasets import load_breast_cancer
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Sequential
@@ -25,7 +25,7 @@ ACTIVATION = 'relu'
 EPOCHS = 1000
 BATCH_SIZE = 32
 LEARNING_RATE = 0.001
-PATIENCE = 20
+PATIENCE = 150
 
 set_random_seed(SEED)
 # ======================================================================
@@ -48,7 +48,8 @@ x_train, x_test, y_train, y_test = train_test_split(
 )
 
 # ======================================================================
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+scaler = StandardScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 # ======================================================================
@@ -105,8 +106,25 @@ print('===================================')
 print('')
 
 """
-===== RESULT =====
+===== RESULT ===== minmax
 | seed=77 | units=30-36-36-36 | act=relu | ts=0.7 | vs=0.3 | bs=32 | ep=1000 | lr=0.001 | pat=20
 || acc=0.9649 | stop=41 | time=3.1s |
 ===================================
+===== RESULT ===== minmax
+| seed=77 | units=30-36-36-36 | act=relu | ts=0.7 | vs=0.3 | bs=32 | ep=1000 | lr=0.001 | pat=20
+|| acc=0.9532 | stop=37 | time=2.9s |
+===================================
+===== RESULT ===== standard
+| seed=77 | units=30-36-36-36 | act=relu | ts=0.7 | vs=0.3 | bs=32 | ep=1000 | lr=0.001 | pat=80
+|| acc=0.9532 | stop=97 | time=5.9s |
+===================================
+===== RESULT ===== standard
+| seed=77 | units=30-36-36-36 | act=relu | ts=0.7 | vs=0.3 | bs=32 | ep=1000 | lr=0.001 | pat=150
+|| acc=0.9532 | stop=167 | time=9.7s |
+===================================
+===== RESULT ===== abs
+| seed=77 | units=30-36-36-36 | act=relu | ts=0.7 | vs=0.3 | bs=32 | ep=1000 | lr=0.001 | pat=150
+|| acc=0.9532 | stop=167 | time=9.6s |
+===================================
+
 """

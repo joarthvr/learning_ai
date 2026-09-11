@@ -3,7 +3,7 @@ import time
 import pandas as pd
 from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Input
 from tensorflow.keras.models import Sequential
@@ -53,7 +53,10 @@ x_train, x_test, y_train, y_test = train_test_split(
 )
 
 # ======================================================================
-scaler = MinMaxScaler()
+# scaler = MinMaxScaler()
+# scaler = StandardScaler()
+# scaler = MaxAbsScaler()
+scaler = RobustScaler()
 x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)  # train 에서 구한 Min/Max 를 그대로 적용
 # ======================================================================
@@ -108,8 +111,23 @@ print('===================================')
 print('')
 
 """
-===== RESULT =====
+===== RESULT ===== minmax
 | seed=153 | units=12-12-8 | act=relu | ts=0.7 | vs=0.3 | bs=42 | ep=200 | lr=0.001 | pat=15
 || rmse=51.2163 | stop=ES미발동 | time=12.0s |
+===================================
+
+===== RESULT ===== standard
+| seed=153 | units=12-12-8 | act=relu | ts=0.7 | vs=0.3 | bs=42 | ep=200 | lr=0.001 |pat=15
+|| rmse=49.6318 | stop=ES미발동 | time=11.9s |
+===================================
+
+===== RESULT =====
+| seed=153 | units=12-12-8 | act=relu | ts=0.7 | vs=0.3 | bs=42 | ep=200 | lr=0.001 |pat=15
+|| rmse=51.3603 | stop=ES미발동 | time=12.4s |
+===================================
+
+===== RESULT ===== robust
+| seed=153 | units=12-12-8 | act=relu | ts=0.7 | vs=0.3 | bs=42 | ep=200 | lr=0.001 | pat=15
+|| rmse=50.2420 | stop=ES미발동 | time=11.9s |
 ===================================
 """

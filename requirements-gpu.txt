@@ -1,0 +1,24 @@
+# GPU 실습 환경 (conda env: tf29x-gpu / Python 3.10)
+#   conda create -n tf29x-gpu python=3.10
+#   conda activate tf29x-gpu
+#   conda install -c conda-forge cudatoolkit=11.2 cudnn=8.1
+#   pip install -r requirements-gpu.txt
+#
+# 왜 TF 2.9 인가:
+#   TensorFlow 2.11 부터 윈도우 네이티브 GPU 지원이 끊겼다 (WSL2 필요).
+#   윈도우에서 GPU 를 쓰려면 2.10 이하여야 한다.
+#
+# 왜 numpy / pandas 버전이 py311 과 다른가:
+#   TF 2.9 는 numpy 2.x 에서 import 자체가 실패한다 (numpy 2.0 의 C API 변경).
+#   그래서 numpy 1.26 을 지켜야 하고, numpy 2.x 를 요구하는 pandas 3.x 도 못 쓴다.
+#   scikit-learn 은 1.7.2 까지 numpy 1.26 으로 동작하므로 py311 과 거의 맞췄다.
+
+tensorflow-gpu==2.9.3
+numpy==1.26.4
+pandas==2.1.4
+scikit-learn==1.7.2
+matplotlib==3.10.9
+scipy==1.13.1
+
+# 개발 도구
+ruff==0.16.6

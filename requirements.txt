@@ -1,6 +1,11 @@
-# 실습 환경 (conda env: py311 / Python 3.11.0)
+# 기본 실습 환경 — CPU (conda env: py311 / Python 3.11.0)
 #   conda create -n py311 python=3.11
+#   conda activate py311
 #   pip install -r requirements.txt
+#
+# 주의: TensorFlow 2.11 부터 윈도우 네이티브 GPU 를 지원하지 않는다.
+#       GPU 로 돌리려면 requirements-gpu.txt 를 볼 것.
+
 tensorflow==2.21.0
 numpy==2.4.6
 pandas==3.0.5

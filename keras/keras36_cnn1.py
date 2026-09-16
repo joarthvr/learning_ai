@@ -1,13 +1,13 @@
-from tensorflow.keras.layers import Conv2D
+from tensorflow.keras.layers import Conv2D, Input
 from tensorflow.keras.models import Sequential
 
 model = Sequential()
+model.add(Input(shape=(5, 5, 1)))
 # 서로 다른 2×2 커널 10개가 입력 전체를 각각 스캔해서, 특징 맵 10개를 만든다.
 model.add(
     Conv2D(
         10,
         (2, 2),
-        input_shape=(5, 5, 1),
         kernel_initializer='glorot_uniform',  # 커널 가중치: 랜덤 초기화
         bias_initializer='zeros',  # bias: 0으로 초기화 (기본값)
     )

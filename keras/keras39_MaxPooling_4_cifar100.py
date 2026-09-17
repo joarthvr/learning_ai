@@ -4,12 +4,13 @@ import numpy as np
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import OneHotEncoder
 from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.datasets import fashion_mnist
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Input
+from tensorflow.keras.datasets import cifar100
+from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Input, MaxPool2D
 from tensorflow.keras.models import Sequential
 
 SEED = 42
 EPOCHS = 50
+
 BATCH_SIZE = 128
 VAL_SPLIT = 0.2
 STEP = 'fashion'
@@ -18,9 +19,9 @@ RLR_PATIENCE = 5
 
 #! 1. 데이터 -----------------------------------------------------------
 
-(x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
-print(x_train.shape, y_train.shape)  # (60000, 28, 28) (60000,)
-print(x_test.shape, y_test.shape)  # (10000, 28, 28) (10000,)
+(x_train, y_train), (x_test, y_test) = cifar100.load_data()
+print(x_train.shape, y_train.shape)  # (50000, 32, 32, 3) (50000, 1)
+print(x_test.shape, y_test.shape)  # (10000, 32, 32, 3) (10000, 1)
 print(np.max(x_train), np.min(x_train))  # 255 0 => 흑백
 print(np.max(x_test), np.min(x_test))  # 255 0 => 흑백
 
@@ -29,9 +30,9 @@ print(np.max(x_test), np.min(x_test))  # 255 0 => 흑백
 x_train = (x_train - 127.5) / 127.5
 x_test = (x_test - 127.5) / 127.5
 
-x_train = x_train.reshape(-1, 28, 28, 1)
-x_test = x_test.reshape(-1, 28, 28, 1)
-print(x_train.shape, x_test.shape)  # (60000, 28, 28, 1) (10000, 28, 28, 1)
+x_train = x_train.reshape(-1, 32, 32, 3)
+x_test = x_test.reshape(-1, 32, 32, 3)
+print(x_train.shape, x_test.shape)  # (50000, 32, 32, 3) (10000, 32, 32, 3)
 
 #! 원핫 인코더
 ohe = OneHotEncoder(sparse_output=False)
@@ -39,26 +40,27 @@ y_train = y_train.reshape(-1, 1)
 y_test = y_test.reshape(-1, 1)
 y_train = ohe.fit_transform(y_train)
 y_test = ohe.fit_transform(y_test)
-print(y_train.shape, y_test.shape)  # (60000, 10) (10000, 10)
-
+print(y_train.shape, y_test.shape)  # (50000, 100) (10000, 100)
 
 #! 2. 모델 구성 -----------------------------------------------------------
 model = Sequential()
-model.add(Input(shape=(28, 28, 1)))
+model.add(Input(shape=(32, 32, 3)))
 model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+model.add(MaxPool2D())
 model.add(Dropout(0.25))
 
 model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Conv2D(128, (3, 3), activation='relu', padding='same'))
+model.add(Conv2D(256, (3, 3), activation='relu', padding='same'))
+model.add(MaxPool2D())
 model.add(Dropout(0.25))
 
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(10, activation='softmax'))
+model.add(Dense(100, activation='softmax'))
 
 model.summary()
 
@@ -104,14 +106,13 @@ print('')
 
 """
 ======================= 실험 기록 =======================
-# 0.92 목표
+# 0.4 목표
 ===== RESULT =====
 ? | step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-? | acc=0.9281 | loss=0.4499 | stop=ES미발동 | time=340.7s |
+? || acc=0.4667 | loss=2.1094 | stop=ES미발동 | time=138.6s |
 
 | step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-| acc=0.9267 | loss=0.3256 | stop=49 | time=326.4s
+|| acc=0.4544 | loss=2.3073 | stop=49 | time=411.2s |
+===================================
 
-| step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-| acc=0.9215 | loss=0.2503 | stop=29 | time=196.9s |
 """

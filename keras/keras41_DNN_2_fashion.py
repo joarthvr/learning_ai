@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import OneHotEncoder
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.datasets import fashion_mnist
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Input
+from tensorflow.keras.layers import Dense, Dropout, Input
 from tensorflow.keras.models import Sequential
 
 SEED = 42
@@ -29,14 +29,12 @@ print(np.max(x_test), np.min(x_test))  # 255 0 => 흑백
 x_train = (x_train - 127.5) / 127.5
 x_test = (x_test - 127.5) / 127.5
 
-x_train = x_train.reshape(-1, 28, 28, 1)
-x_test = x_test.reshape(-1, 28, 28, 1)
+x_train = x_train.reshape(-1, 28 * 28)
+x_test = x_test.reshape(-1, 28 * 28)
 print(x_train.shape, x_test.shape)  # (60000, 28, 28, 1) (10000, 28, 28, 1)
 
 #! 원핫 인코더
 ohe = OneHotEncoder(sparse_output=False)
-y_train = y_train.reshape(-1, 1)
-y_test = y_test.reshape(-1, 1)
 y_train = ohe.fit_transform(y_train)
 y_test = ohe.fit_transform(y_test)
 print(y_train.shape, y_test.shape)  # (60000, 10) (10000, 10)
@@ -44,33 +42,28 @@ print(y_train.shape, y_test.shape)  # (60000, 10) (10000, 10)
 
 #! 2. 모델 구성 -----------------------------------------------------------
 model = Sequential()
-model.add(Input(shape=(28, 28, 1)))
-model.add(Conv2D(32, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(32, (3, 3), activation='relu'))
+model.add(Input(shape=(28 * 28)))
+model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.25))
-
-model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
-model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.25))
-
-model.add(Flatten())
+model.add(Dense(1024, activation='relu'))
+model.add(Dropout(0.25))
+model.add(Dense(512, activation='relu'))
+model.add(Dropout(0.25))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.25))
 model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
-model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
+model.add(Dropout(0.25))
+model.add(Dense(64, activation='relu'))
+model.add(Dropout(0.25))
 model.add(Dense(10, activation='softmax'))
-
 model.summary()
 
 #! 3. 컴파일, 훈련 -----------------------------------------------------------
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
-es = EarlyStopping(
-    monitor='val_acc',
-    mode='max',
-    patience=PATIENCE,
-    restore_best_weights=True,
-)
+es = EarlyStopping(monitor='val_acc', mode='max', patience=PATIENCE, restore_best_weights=True)
 
 start_time = time.time()
 model.fit(
@@ -106,12 +99,8 @@ print('')
 ======================= 실험 기록 =======================
 # 0.92 목표
 ===== RESULT =====
-? | step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-? | acc=0.9281 | loss=0.4499 | stop=ES미발동 | time=340.7s |
-
+? step=fashion | seed=42 | bs=128 | ep=50 | pat=15
+? acc=0.9302 | loss=0.2205 | stop=49 | time=213.2s |
 | step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-| acc=0.9267 | loss=0.3256 | stop=49 | time=326.4s
-
-| step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-| acc=0.9215 | loss=0.2503 | stop=29 | time=196.9s |
+|| acc=0.9169 | loss=0.2325 | stop=ES미발동 | time=232.9s |
 """

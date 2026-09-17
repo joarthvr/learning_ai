@@ -16,3 +16,4 @@ logs/
 # ── 도구 캐시 / 에디터 ──
 .ruff_cache
 .vscode
+claude.md

@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import OneHotEncoder
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.datasets import mnist
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten
+from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Input
 from tensorflow.keras.models import Sequential
 
 #! 1. 데이터 -----------------------------------------------------------
@@ -48,7 +48,8 @@ print(y_train.shape, y_test.shape)  # ? (60000, 10) (10000, 10)
 
 #! 2. 모델 구성 -----------------------------------------------------------
 model = Sequential()
-model.add(Conv2D(64, (3, 3), input_shape=(28, 28, 1)))  # ? (26,26,64)
+model.add(Input(shape=(28, 28, 1)))
+model.add(Conv2D(64, (3, 3)))  # ? (26,26,64)
 
 model.add(Conv2D(filters=32, kernel_size=(3, 3), activation='relu'))  # ? (24,24,32)
 model.add(Dropout(0.2))

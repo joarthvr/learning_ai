@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import OneHotEncoder
 from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.datasets import fashion_mnist
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Input
+from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Input, MaxPool2D
 from tensorflow.keras.models import Sequential
 
 SEED = 42
@@ -50,12 +50,12 @@ model.add(Conv2D(32, (3, 3), activation='relu'))
 model.add(Dropout(0.25))
 
 model.add(Conv2D(64, (3, 3), activation='relu', padding='same'))
+model.add(MaxPool2D())
 model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPool2D())
 model.add(Dropout(0.25))
 
 model.add(Flatten())
-model.add(Dense(128, activation='relu'))
-model.add(Dropout(0.5))
 model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(10, activation='softmax'))
@@ -106,12 +106,6 @@ print('')
 ======================= 실험 기록 =======================
 # 0.92 목표
 ===== RESULT =====
-? | step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-? | acc=0.9281 | loss=0.4499 | stop=ES미발동 | time=340.7s |
-
-| step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-| acc=0.9267 | loss=0.3256 | stop=49 | time=326.4s
-
-| step=fashion | seed=42 | bs=128 | ep=50 | pat=15
-| acc=0.9215 | loss=0.2503 | stop=29 | time=196.9s |
+? step=fashion | seed=42 | bs=128 | ep=50 | pat=15
+? acc=0.9302 | loss=0.2205 | stop=49 | time=213.2s |
 """

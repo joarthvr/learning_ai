@@ -7,7 +7,7 @@ from tensorflow.keras.models import Sequential
 
 ########################################################
 # 1. 데이터
-path = '../_data/kaggle_bike/'
+path = './_data/kaggle_bike/'
 train_csv = pd.read_csv(path + 'train.csv', index_col=0)
 print(train_csv)  # [10886 rows x 11 columns]
 test_csv = pd.read_csv(path + 'test.csv', index_col=0)

@@ -10,7 +10,7 @@ from tensorflow.keras.models import Sequential
 # 1. 데이터
 # 데이터를 보자마자 이상치와 결측치를 검사한다
 # 파일 경로를 명시한다
-path = '../_data/ddarung/'  # 상대경로
+path = './_data/ddarung/'  # 상대경로
 # path = "c:/study/_data/ddarung" #절대경로
 
 # 불러온 파일을 수치화해야한다

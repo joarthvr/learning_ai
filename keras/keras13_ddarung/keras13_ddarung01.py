@@ -10,7 +10,7 @@ from tensorflow.keras.models import Sequential
 # 1. 데이터
 # 데이터를 보자마자 이상치와 결측치를 검사한다
 # 파일 경로를 명시한다
-path = '../_data/ddarung/'  # 상대경로
+path = './_data/ddarung/'  # 상대경로
 # path = "c:/study/_data/ddarung" #절대경로
 
 # 불러온 파일을 수치화해야한다
@@ -51,32 +51,27 @@ print(y.shape)
 x_train, x_test, y_train, y_test = train_test_split(
     x,
     y,
-    train_size=0.7,  # 디폴트 75%
-    test_size=0.3,  # 테스트 30%
-    random_state=49,  # 재현성 보장
+    train_size=0.5,  # 디폴트 75%
+    test_size=0.5,  # 테스트 30%
+    random_state=72,  # 재현성 보장
     shuffle=True,  # 섞기 (기본값)
 )
-
-######################## submit 물밑 작업 ########################
-print(test_csv.info())
-######################## 결측치 처리 2. 평균값 넣기 ########################
-test_csv = test_csv.fillna(test_csv.mean())  # (715, 9)
-print(test_csv.info())
-
-
 # 2. 모델 설정
 
 model = Sequential()
 model.add(Dense(1024, input_dim=9))
 model.add(Dense(512))
 model.add(Dense(256))
+model.add(Dense(128))
+model.add(Dense(64))
+model.add(Dense(32))
 model.add(Dense(15))
-model.add(Dense(30))
+model.add(Dense(128))
 model.add(Dense(1))
 
 # 3. 컴파일 훈련
 model.compile(loss='mse', optimizer='adam')
-model.fit(x_train, y_train, epochs=100, batch_size=52, verbose=1, validation_split=0.30)
+model.fit(x_train, y_train, epochs=1000, batch_size=52)
 
 # 4. 결과 예측
 loss = model.evaluate(x_test, y_test)
@@ -95,14 +90,22 @@ print('loss: ', loss)
 print('R^2: :', r2)
 print('RMSE: ', rmse)
 
+# loss:  2557.42041015625
+# R^2: : 0.5876779111389974
+# RMSE:  50.57094309442328
 
-######################## submission.csv 만들기// count 칼럼에 값 넣어준다. ########################
-print(submission)
-y_submit = model.predict(test_csv)
-submission['count'] = y_submit
-print(submission)
-print(submission.shape)
+# loss:  2557.5322265625
+# R^2: : 0.5876598909998346
+# RMSE:  50.57204815949276
 
+# loss:  2568.586181640625
+# R^2: : 0.5858776873235042
+# RMSE:  50.68122079288788
 
-######################## submission.csv 만들기// count 칼럼에 값 넣어준다. ########################
-submission.to_csv(path + 'submit/' + 'submit_0904_1141.csv')
+# loss:  2712.032470703125
+# R^2: : 0.5724515544682944
+# RMSE:  52.077177908751196
+
+# loss:  2703.5302734375
+# R^2: : 0.5737919102004447
+# RMSE:  51.99548338091939

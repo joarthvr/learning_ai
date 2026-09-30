@@ -17,3 +17,5 @@ logs/
 .ruff_cache
 .vscode
 claude.md
+
+.env

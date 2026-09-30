@@ -1,4 +1,4 @@
-# [학습 정리] keras46 가위바위보(rps) → npy 저장 (짝: keras47_02_load_npy_rps)
+# [학습 정리] keras46 가위바위보(rps) → npy 저장 (짝: keras47_load_npy_02_rps)
 # - class_mode 를 안 주면 기본값 'categorical' → y 가 이미 원핫 (N, 3) 으로 나온다.
 #   그래서 01 처럼 OneHotEncoder 를 따로 쓸 필요가 없다.
 

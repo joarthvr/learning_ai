@@ -1,4 +1,4 @@
-# [학습 정리] keras46 남녀(men_women) → npy 저장 (짝: keras47_03_load_npy_men_women)
+# [학습 정리] keras46 남녀(men_women) → npy 저장 (짝: keras47_load_npy_03_men_women)
 # - 2.7만 장이라 해상도를 100x100 으로 낮춤. 200x200 이면 메모리가 4배 → 약 13GB (float32).
 # - 남:여 = 17678:9489 불균형 → stratify=y 로 train/test 비율을 똑같이 유지한다.
 #   (이 불균형은 keras51_augment_05 에서 '여자만 증강'으로 다시 다룬다)

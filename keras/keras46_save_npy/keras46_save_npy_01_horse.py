@@ -1,4 +1,4 @@
-# [학습 정리] keras46 이미지 → npy 저장 (짝: keras47_01_load_npy_horse)
+# [학습 정리] keras46 이미지 → npy 저장 (짝: keras47_load_npy_01_horse)
 # - jpg 는 읽을 때마다 디코딩 + 리사이즈 비용이 든다. 한 번만 배열로 만들어 npy 로 저장해두면
 #   다음부터는 np.load 한 줄로 끝 → 실험 반복 속도가 크게 빨라진다.
 # - batch_size 를 전체 장수 이상으로 주면 xy[0] 한 배치에 데이터 전부가 들어온다.

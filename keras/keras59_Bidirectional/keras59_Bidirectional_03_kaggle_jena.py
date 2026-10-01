@@ -13,7 +13,7 @@ from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-from tensorflow.keras.layers import GRU, Dense, Dropout, Bidirectional, Dense, SimpleRNN
+from tensorflow.keras.layers import GRU, Bidirectional, Dense, Dropout
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 
@@ -23,11 +23,11 @@ PATH = './_data/kaggle_jena/'
 # wd 열 드랍
 # 2016.12.31 데이터 (144개) 제외하고 학습
 
-path = './_save/keras58/'
+path = './_save/keras59/'
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
 filename = '{epoch:04d}-{val_loss:.4f}.keras'
-filepath = f'{path}k58_{date}-{filename}'
+filepath = f'{path}k59_{date}-{filename}'
 
 # 1. 데이터
 
@@ -79,14 +79,18 @@ print(x_train.shape, x_test.shape)
 
 x_train = x_train.reshape(-1, 13)
 x_test = x_test.reshape(-1, 13)
+x_pred = x_pred.reshape(-1, 13)
 
+# ======================================================================
 scaler = RobustScaler()
-scaler.fit(x_train)
-x_train = scaler.fit_transform(x_train)
-x_test = scaler.fit_transform(x_test)
+x_train = scaler.fit_transform(x_train)  # fit 은 train 에만
+x_test = scaler.transform(x_test)
+x_pred = scaler.transform(x_pred)  # 예측 입력도 train 과 같은 기준으로 스케일
+# ======================================================================
 
 x_train = x_train.reshape(-1, 144, 13)
 x_test = x_test.reshape(-1, 144, 13)
+x_pred = x_pred.reshape(-1, 144, 13)
 
 print(x_train.shape, x_test.shape)
 
@@ -94,7 +98,7 @@ print(x_train.shape, x_test.shape)
 
 # 2. 모델 구성
 model = Sequential()
-model.add(GRU(32, input_shape=(144, 13)))
+model.add(Bidirectional(GRU(32), input_shape=(144, 13)))  # 정방향 + 역방향 → 출력 (None, 64)
 model.add(Dense(64, activation='relu'))
 model.add(Dense(64, activation='relu'))
 model.add(Dropout(0.4))
@@ -134,3 +138,9 @@ print(f'소요시간 = {end_time - start_time:.4f}')
 print(f'loss = {loss:.4f}')
 # print(f'r2 : {r2_score(y_cor, y_pred):.4f}')
 print(f'rmse : {root_mean_squared_error(y_cor, y_pred):.4f}')
+
+"""
+소요시간 = 547.3360
+loss = 3479.5752
+rmse : 44.8387
+"""

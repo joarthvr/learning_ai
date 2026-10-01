@@ -3,13 +3,11 @@ pre-commit:
   commands:
     ruff-check:
       glob: "*.py"
-      exclude: '^keras/keras(4[6-9]|5\d)_'
       run: |
         RUFF=$(command -v ruff || echo "$HOME/miniconda3/envs/py311/Scripts/ruff.exe")
         "$RUFF" check {staged_files}
     ruff-format:
       glob: "*.py"
-      exclude: '^keras/keras(4[6-9]|5\d)_'
       run: |
         RUFF=$(command -v ruff || echo "$HOME/miniconda3/envs/py311/Scripts/ruff.exe")
         "$RUFF" format --check {staged_files}

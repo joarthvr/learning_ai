@@ -7,10 +7,10 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, RobustScaler, StandardScaler
+from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 
 PATH = 'C:/study/_data/kaggle_santander/'
@@ -21,8 +21,8 @@ train = pd.read_csv(PATH + 'train.csv', index_col=0)
 test = pd.read_csv(PATH + 'test.csv', index_col=0)
 submission = pd.read_csv(PATH + 'sample_submission.csv', index_col=0)
 
-print(train.shape, test.shape, submission.shape)      # (200000, 201) (200000, 200) (200000, 1)
-print(train.info(), test.info()) 
+print(train.shape, test.shape, submission.shape)  # (200000, 201) (200000, 200) (200000, 1)
+print(train.info(), test.info())
 
 print(np.unique(train.target, return_counts=True))  # (array([0, 1]), array([179902,  20098]))
 
@@ -34,7 +34,7 @@ y = train.target
 
 print(x.shape, y.shape)  # (200000, 200) (200000,)
 
-x_train, x_test, y_train, y_test = train_test_split(x,y, random_state=42, stratify=y)
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42, stratify=y)
 
 # scaler = MinMaxScaler().fit(x_train)
 # scaler = StandardScaler().fit(x_train)
@@ -64,14 +64,16 @@ model.add(Dense(1, activation='sigmoid'))
 # 3. 컴파일, 훈련
 learning_rate = 0.0005
 
-model.compile(loss='binary_crossentropy', optimizer=Adam(learning_rate=learning_rate), metrics=['acc'])
+model.compile(
+    loss='binary_crossentropy', optimizer=Adam(learning_rate=learning_rate), metrics=['acc']
+)
 es = EarlyStopping(patience=30, restore_best_weights=True)
 rlr = ReduceLROnPlateau(patience=20, factor=0.5, verbose=1)
-mcp = ModelCheckpoint(filepath = filepath,
-                      verbose=1,
-                      save_best_only=True)
+mcp = ModelCheckpoint(filepath=filepath, verbose=1, save_best_only=True)
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=100, batch_size=2048, validation_split = 0.2, callbacks=[es, rlr])
+hist = model.fit(
+    x_train, y_train, epochs=100, batch_size=2048, validation_split=0.2, callbacks=[es, rlr]
+)
 end_time = time.time()
 print(f'소요시간 : {end_time - start_time:.4f}')
 
@@ -118,7 +120,7 @@ MinMaxscaler 적용 후
 loss = 0.2339
 acc = 0.9130
 
-StandardScaler 
+StandardScaler
 loss = 0.2420
 acc = 0.9108
 sklearn_acc = 0.9108
@@ -176,4 +178,3 @@ sklearn_acc = 0.9109
 # plt.grid()
 # plt.title('Santander_EarlyStopping')
 # plt.show()
-

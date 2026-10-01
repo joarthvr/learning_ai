@@ -1,15 +1,13 @@
 import datetime
 import time
 
-import numpy as np
 import pandas as pd
 from sklearn.datasets import fetch_covtype
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, RobustScaler, StandardScaler
+from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 
 # acc = 0.93
@@ -31,7 +29,9 @@ y = dataset.target
 y = pd.get_dummies(y, dtype='int')
 # print(y)
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42, test_size=0.3, stratify=y)
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, random_state=42, test_size=0.3, stratify=y
+)
 
 # scaler = MinMaxScaler().fit(x_train)
 # scaler = StandardScaler().fit(x_train)
@@ -40,7 +40,7 @@ scaler = RobustScaler().fit(x_train)
 x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
-PATH = "./_save/keras31/"
+PATH = './_save/keras31/'
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
 filename = '{epoch:04d}-{val_loss:.4f}.keras'
@@ -60,18 +60,16 @@ model.add(Dense(7, activation='softmax'))
 
 # 3. 컴파일, 훈련
 learning_rate = 0.0001
-model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=learning_rate), metrics = ['acc'])
+model.compile(
+    loss='categorical_crossentropy', optimizer=Adam(learning_rate=learning_rate), metrics=['acc']
+)
 es = EarlyStopping(patience=30, restore_best_weights=True)
 rlr = ReduceLROnPlateau(patience=20, factor=0.5, verbose=1)
-mcp = ModelCheckpoint(filepath=filepath,
-                      verbose=1,
-                      save_best_only=True)
+mcp = ModelCheckpoint(filepath=filepath, verbose=1, save_best_only=True)
 start = time.time()
-hist = model.fit(x_train, y_train,
-          epochs = 300,
-          batch_size=256,
-          callbacks = [es, rlr],
-          validation_split = 0.2)
+hist = model.fit(
+    x_train, y_train, epochs=300, batch_size=256, callbacks=[es, rlr], validation_split=0.2
+)
 end = time.time()
 
 

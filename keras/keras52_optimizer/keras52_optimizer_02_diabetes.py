@@ -1,13 +1,11 @@
-import datetime
 import time
 
-import numpy as np
 from sklearn.datasets import load_diabetes
 from sklearn.metrics import r2_score, root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+from tensorflow.keras.callbacks import EarlyStopping
 from tensorflow.keras.layers import Dense, Dropout, Input
-from tensorflow.keras.models import Model, Sequential, load_model
+from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
 # PATH = './_save/keras33/'
@@ -24,9 +22,9 @@ dataset = load_diabetes()
 x = dataset.data
 y = dataset.target
 
-print(x.shape, y.shape)    # (442, 10) (442,)
+print(x.shape, y.shape)  # (442, 10) (442,)
 
-x_train, x_test, y_train, y_test = train_test_split(x,y, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42)
 
 
 # 2. 모델구성
@@ -65,11 +63,7 @@ es = EarlyStopping(patience=100, restore_best_weights=True)
 #                       filepath = filepath)
 
 start_time = time.time()
-model.fit(x_train, y_train,
-          epochs=5000,
-          batch_size=32,
-          callbacks=[es],
-          validation_split=0.2)
+model.fit(x_train, y_train, epochs=5000, batch_size=32, callbacks=[es], validation_split=0.2)
 end_time = time.time()
 
 

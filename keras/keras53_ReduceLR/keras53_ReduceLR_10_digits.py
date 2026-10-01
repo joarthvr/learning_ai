@@ -7,10 +7,10 @@ import tensorflow as tf
 from sklearn.datasets import load_digits
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, RobustScaler, StandardScaler
+from sklearn.preprocessing import RobustScaler
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 
 # acc : 1.0
@@ -39,7 +39,7 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 
-PATH = './_save/keras31/' 
+PATH = './_save/keras31/'
 filename = '{epoch:04d}-{val_loss:.4f}.keras'
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
@@ -58,19 +58,14 @@ model.add(Dense(10, activation='softmax'))
 
 # 3. 컴파일, 훈련
 learning_rate = 0.005
-model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=learning_rate), metrics=['acc'])
+model.compile(
+    loss='categorical_crossentropy', optimizer=Adam(learning_rate=learning_rate), metrics=['acc']
+)
 es = EarlyStopping(patience=250, restore_best_weights=True)
 rlr = ReduceLROnPlateau(patience=10, factor=0.5, verbose=1)
-mcp = ModelCheckpoint(filepath = filepath,
-                      verbose=1,
-                      save_best_only=True)
+mcp = ModelCheckpoint(filepath=filepath, verbose=1, save_best_only=True)
 start = time.time()
-hist = model.fit(x_train, y_train,
-          epochs=5000,
-          batch_size=32,
-          callbacks=[es],
-          validation_split=0.2
-          )
+hist = model.fit(x_train, y_train, epochs=5000, batch_size=32, callbacks=[es], validation_split=0.2)
 end = time.time()
 
 
@@ -90,9 +85,7 @@ print(f'learning_rate = {learning_rate}')
 y_pred = tf.one_hot(np.argmax(y_pred, axis=1), y_pred.shape[1])
 # print(y_test.shape, y_pred.shape)
 acc = accuracy_score(y_test, y_pred)
-print(f'acc = {acc:.4f}') 
-
-
+print(f'acc = {acc:.4f}')
 
 
 # loss = 0.2376

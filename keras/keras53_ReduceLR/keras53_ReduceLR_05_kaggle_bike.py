@@ -6,10 +6,10 @@ import time
 import pandas as pd
 from sklearn.metrics import r2_score, root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, RobustScaler, StandardScaler
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-from tensorflow.keras.layers import Dense, Dropout, Input
-from tensorflow.keras.models import Model, Sequential, load_model
+from sklearn.preprocessing import RobustScaler
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
 PATH = './_data/kaggle_bike/'
@@ -18,15 +18,15 @@ PATH = './_data/kaggle_bike/'
 train = pd.read_csv(PATH + 'train.csv', index_col=0)
 test = pd.read_csv(PATH + 'test.csv', index_col=0)
 
-print(train.shape, test.shape)   # (10886, 11) (6493, 8)
-print(train.info(), test.info()) 
+print(train.shape, test.shape)  # (10886, 11) (6493, 8)
+print(train.info(), test.info())
 
 x = train.drop(columns=['casual', 'registered', 'count'])
 y = train['count']
-print(x.shape, test.shape)   # (10886, 8) (6493, 8)
-print(x.info(), test.info()) 
+print(x.shape, test.shape)  # (10886, 8) (6493, 8)
+print(x.info(), test.info())
 
-x_train, x_test, y_train, y_test = train_test_split(x,y, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42)
 
 # scaler = MinMaxScaler().fit(x_train)
 # scaler = StandardScaler().fit(x_train)
@@ -74,7 +74,9 @@ rlr = ReduceLROnPlateau(patience=20, factor=0.5, verbose=1)
 # mcp = ModelCheckpoint(filepath=filepath, verbose=1,
 #                       save_best_only=True)
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=5000, batch_size=256, validation_split=0.2, callbacks=[es, rlr])
+hist = model.fit(
+    x_train, y_train, epochs=5000, batch_size=256, validation_split=0.2, callbacks=[es, rlr]
+)
 end_time = time.time()
 
 
@@ -97,7 +99,7 @@ print(f'rmse = {rmse:.4f}')
 # rmse = 154.8744
 
 """
-MinMaxscaler 
+MinMaxscaler
 r2 = 0.2698
 rmse = 154.7886
 

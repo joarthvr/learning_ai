@@ -6,11 +6,10 @@ import time
 import pandas as pd
 from sklearn.metrics import r2_score, root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, RobustScaler, StandardScaler
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from tensorflow.keras.layers import Dense, Dropout, Input
-from tensorflow.keras.models import Model, Sequential, load_model
-from tensorflow.keras.optimizers import Adam
+from sklearn.preprocessing import RobustScaler
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.models import Model
 
 PATH = './_data/ddarung/'
 
@@ -18,18 +17,18 @@ PATH = './_data/ddarung/'
 train = pd.read_csv(PATH + 'train.csv', index_col=0)
 test = pd.read_csv(PATH + 'test.csv', index_col=0)
 
-print(train.shape, test.shape)   # (1459, 11) (715, 10)
-print(train.info(), test.info()) 
+print(train.shape, test.shape)  # (1459, 11) (715, 10)
+print(train.info(), test.info())
 
 train.fillna(train.mean(), inplace=True)
 test.fillna(test.mean(), inplace=True)
-print(train.info(), test.info()) 
-print(train.shape, test.shape)   # (1459, 10) (715, 9)
+print(train.info(), test.info())
+print(train.shape, test.shape)  # (1459, 10) (715, 9)
 
 x = train.drop(columns='count')
 y = train['count']
 
-x_train, x_test, y_train, y_test = train_test_split(x,y, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42)
 
 # scaler = MinMaxScaler().fit(x_train)
 # scaler = StandardScaler().fit(x_train)
@@ -100,7 +99,7 @@ print(f'rmse = {rmse:.4f}')
 # rmse = 52.4311
 
 """
-MinMaxScaler 전처리 후 
+MinMaxScaler 전처리 후
 
 r2 = 0.6237
 rmse = 51.6070

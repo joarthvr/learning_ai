@@ -6,10 +6,10 @@ import numpy as np
 from sklearn.datasets import fetch_california_housing
 from sklearn.metrics import r2_score, root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, RobustScaler, StandardScaler
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from tensorflow.keras.layers import Dense, Dropout, Input
-from tensorflow.keras.models import Model, Sequential, load_model
+from sklearn.preprocessing import RobustScaler
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.models import Model
 
 # import matplotlib.pyplot as plt
 # plt.rcParams['font.family'] ='Malgun Gothic'
@@ -22,7 +22,7 @@ housing = fetch_california_housing()
 x = housing.data
 y = housing.target
 
-print(x.shape, y.shape)   # (20640, 8) (20640,)
+print(x.shape, y.shape)  # (20640, 8) (20640,)
 
 x_train, x_test, y_train, y_test = train_test_split(x, y)
 
@@ -71,23 +71,27 @@ learning_rate = 0.01
 # learning_rate = 0.01
 
 
-
-model.compile(loss='mse', optimizer = Adam(learning_rate=learning_rate))   # weights만 불러와서 compile도 해야함
+model.compile(
+    loss='mse', optimizer=Adam(learning_rate=learning_rate)
+)  # weights만 불러와서 compile도 해야함
 
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 
-es = EarlyStopping(monitor = 'val_loss', mode='min',
-                   patience=40,
-                   verbose=1,
-                   restore_best_weights=True,
-                   )
+es = EarlyStopping(
+    monitor='val_loss',
+    mode='min',
+    patience=40,
+    verbose=1,
+    restore_best_weights=True,
+)
 
-rlr = ReduceLROnPlateau(monitor='val_loss',
-                  mode='auto',
-                  patience=20,
-                  verbose=1,
-                  factor = 0.5,     # Learning Rate을 어느 비율로 줄일것인지
-                  )
+rlr = ReduceLROnPlateau(
+    monitor='val_loss',
+    mode='auto',
+    patience=20,
+    verbose=1,
+    factor=0.5,  # Learning Rate을 어느 비율로 줄일것인지
+)
 # ################# mcp 세이브 파일명 만들기 시작 ####################
 # import datetime
 # date = datetime.datetime.now()
@@ -99,7 +103,7 @@ rlr = ReduceLROnPlateau(monitor='val_loss',
 
 # path = './_save/keras30/'
 # filename = '{epoch:04d}-{val_loss:.4f}.keras'
-# filepath = ''.join([path, 'k30_', date, '-', filename])  
+# filepath = ''.join([path, 'k30_', date, '-', filename])
 
 ############# 이런식으로 파일명 관리하면 편할 것임 ################
 
@@ -118,9 +122,15 @@ rlr = ReduceLROnPlateau(monitor='val_loss',
 # )
 
 start_time = time.time()
-hist = model.fit(x_train, y_train, verbose=1,
-                 validation_split=0.2, epochs=1000, batch_size=32,
-                 callbacks=[es, rlr])
+hist = model.fit(
+    x_train,
+    y_train,
+    verbose=1,
+    validation_split=0.2,
+    epochs=1000,
+    batch_size=32,
+    callbacks=[es, rlr],
+)
 end_time = time.time()
 
 
@@ -143,7 +153,7 @@ print(f'RMSE = {rmse:.4f}')
 # r2 = 0.4409
 # RMSE = 0.8485
 
-# MinMaxScaler 전처리 후 
+# MinMaxScaler 전처리 후
 # r2 = 0.5981
 # RMSE = 0.7192
 

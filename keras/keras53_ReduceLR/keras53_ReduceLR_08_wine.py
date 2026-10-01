@@ -1,15 +1,16 @@
 import datetime
 import time
 
-import numpy as np
 import pandas as pd
 from sklearn.datasets import load_wine
-from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, OneHotEncoder, RobustScaler, StandardScaler
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from sklearn.preprocessing import (
+    OneHotEncoder,
+    RobustScaler,
+)
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.layers import Dense
-from tensorflow.keras.models import Sequential, load_model
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 
 # acc = 0.95
@@ -19,7 +20,7 @@ dataset = load_wine(as_frame=True)
 x = dataset.data
 y = pd.DataFrame(dataset.target)
 
-print(x.shape, y.shape)     # (178, 13) (178,)
+print(x.shape, y.shape)  # (178, 13) (178,)
 # print(np.unique(y, return_counts=True)) # (array([0, 1, 2]), array([59, 71, 48]))
 # print(dataset.DESCR)        # 13 columns, 3 classes
 # print(dataset.feature_names)
@@ -28,7 +29,9 @@ enc = OneHotEncoder(sparse_output=False)
 y = enc.fit_transform(y)
 print(y.shape)
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42, test_size=0.3, stratify=y)
+x_train, x_test, y_train, y_test = train_test_split(
+    x, y, random_state=42, test_size=0.3, stratify=y
+)
 
 # scaler = MinMaxScaler().fit(x_train)
 # scaler = StandardScaler().fit(x_train)
@@ -38,7 +41,7 @@ x_train = scaler.transform(x_train)
 x_test = scaler.transform(x_test)
 
 
-PATH = "./_save/keras31/"
+PATH = './_save/keras31/'
 filename = '{epoch:04d}-{val_loss:.4f}.keras'
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
@@ -58,18 +61,18 @@ model.add(Dense(3, activation='softmax'))
 
 # 3. 컴파일, 훈련
 learning_rate = 0.01
-model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=learning_rate), metrics=['acc'])
+model.compile(
+    loss='categorical_crossentropy', optimizer=Adam(learning_rate=learning_rate), metrics=['acc']
+)
 es = EarlyStopping(patience=300, restore_best_weights=True)
 rlr = ReduceLROnPlateau(patience=10, factor=0.5, verbose=1)
 # mcp = ModelCheckpoint(filepath=filepath,
 #                       verbose=1,
 #                       save_best_only=True)
 start = time.time()
-hist = model.fit(x_train, y_train,
-          epochs = 5000,
-          batch_size = 32,
-          callbacks=[es, rlr],
-          validation_split = 0.2)
+hist = model.fit(
+    x_train, y_train, epochs=5000, batch_size=32, callbacks=[es, rlr], validation_split=0.2
+)
 end = time.time()
 # model = load_model(f'{PATH}k31_0914_1438-0032-0.1310.keras')
 
@@ -99,7 +102,7 @@ loss = 0.1921
 acc = 0.9259
 
 
-MinMaxScaler 적용 
+MinMaxScaler 적용
 loss = 0.2279
 acc = 0.9444
 

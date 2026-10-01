@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
 load_dotenv()
-os.environ['OPENAI_API_KEY']  # 시스템 환경변수  # → 값을 쓰지 않는 줄. 키가 없으면 KeyError 로 먼저 멈추는 확인용
+os.environ[
+    'OPENAI_API_KEY'
+]  # 시스템 환경변수  # → 값을 쓰지 않는 줄. 키가 없으면 KeyError 로 먼저 멈추는 확인용
 
 llm = ChatOpenAI(
     model='gpt-5.6-terra',

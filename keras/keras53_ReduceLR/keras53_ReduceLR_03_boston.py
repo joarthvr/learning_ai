@@ -2,16 +2,16 @@ import datetime
 import time
 
 from sklearn.metrics import r2_score, root_mean_squared_error
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, RobustScaler, StandardScaler
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
+from sklearn.preprocessing import RobustScaler
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.datasets import boston_housing
-from tensorflow.keras.layers import Dense, Dropout, Input
-from tensorflow.keras.models import Model, Sequential
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
 # 1. 데이터
 (x_train, y_train), (x_test, y_test) = boston_housing.load_data()
-print(x_train.shape, y_train.shape)   # (404, 13) (404,)
+print(x_train.shape, y_train.shape)  # (404, 13) (404,)
 
 # scaler = MinMaxScaler()
 # scaler = StandardScaler()
@@ -44,7 +44,7 @@ model = Model(inputs=input, outputs=output)
 # model.summary()
 # exit()
 
-PATH = "./_save/keras33/"
+PATH = './_save/keras33/'
 date = datetime.datetime.now()
 date = date.strftime('%m%d_%H%M')
 filename = '{epoch:04d}-{val_loss:.4f}.keras'
@@ -61,11 +61,9 @@ rlr = ReduceLROnPlateau(patience=20, factor=0.5, verbose=1)
 #                       save_best_only=True,
 #                       )
 start_time = time.time()
-hist = model.fit(x_train, y_train,
-                 epochs = 5000,
-                 batch_size=32,
-                 callbacks=[es, rlr],
-                 validation_split=0.3)
+hist = model.fit(
+    x_train, y_train, epochs=5000, batch_size=32, callbacks=[es, rlr], validation_split=0.3
+)
 end_time = time.time()
 
 # 4. 예측, 평가
@@ -95,7 +93,7 @@ MinMaxScaler 전처리 후
 r2 = 0.7502
 rmse = 4.5598
 
-StandardScaler 
+StandardScaler
 r2 = 0.7454
 rmse = 4.6034
 

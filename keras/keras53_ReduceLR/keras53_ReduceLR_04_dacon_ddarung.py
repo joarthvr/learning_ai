@@ -6,10 +6,10 @@ import time
 import pandas as pd
 from sklearn.metrics import r2_score, root_mean_squared_error
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MaxAbsScaler, MinMaxScaler, RobustScaler, StandardScaler
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
-from tensorflow.keras.layers import Dense, Dropout, Input
-from tensorflow.keras.models import Model, Sequential, load_model
+from sklearn.preprocessing import RobustScaler
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
 PATH = './_data/ddarung/'
@@ -18,18 +18,18 @@ PATH = './_data/ddarung/'
 train = pd.read_csv(PATH + 'train.csv', index_col=0)
 test = pd.read_csv(PATH + 'test.csv', index_col=0)
 
-print(train.shape, test.shape)   # (1459, 11) (715, 10)
-print(train.info(), test.info()) 
+print(train.shape, test.shape)  # (1459, 11) (715, 10)
+print(train.info(), test.info())
 
 train.fillna(train.mean(), inplace=True)
 test.fillna(test.mean(), inplace=True)
-print(train.info(), test.info()) 
-print(train.shape, test.shape)   # (1459, 10) (715, 9)
+print(train.info(), test.info())
+print(train.shape, test.shape)  # (1459, 10) (715, 9)
 
 x = train.drop(columns='count')
 y = train['count']
 
-x_train, x_test, y_train, y_test = train_test_split(x,y, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=42)
 
 # scaler = MinMaxScaler().fit(x_train)
 # scaler = StandardScaler().fit(x_train)
@@ -78,7 +78,9 @@ es = EarlyStopping(patience=350, restore_best_weights=True)
 rlr = ReduceLROnPlateau(patience=20, factor=0.5, verbose=1)
 # mcp = ModelCheckpoint(filepath=filepath, verbose=1, save_best_only=True)
 start_time = time.time()
-hist = model.fit(x_train, y_train, epochs=5000, batch_size=32, validation_split=0.2, callbacks=[es, rlr])
+hist = model.fit(
+    x_train, y_train, epochs=5000, batch_size=32, validation_split=0.2, callbacks=[es, rlr]
+)
 end_time = time.time()
 
 # 4. 예측, 평가
@@ -101,7 +103,7 @@ print(f'rmse = {rmse:.4f}')
 # rmse = 52.4311
 
 """
-MinMaxScaler 전처리 후 
+MinMaxScaler 전처리 후
 
 r2 = 0.6237
 rmse = 51.6070

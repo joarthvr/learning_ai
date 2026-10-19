@@ -9,6 +9,7 @@ __pycache__/
 .ipynb_checkpoints/
 
 # ── 학습 산출물 ──
+_save
 logs/
 *.h5
 *.keras

@@ -9,7 +9,7 @@ from keras.preprocessing.image import (
 )
 from sklearn.model_selection import train_test_split
 
-PATH = 'C:/study/_data/image/men_women/'
+PATH = 'C:/study/_data/image/men-women/'
 
 datagen = ImageDataGenerator(
     rescale=1.0 / 255,

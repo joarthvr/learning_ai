@@ -58,3 +58,21 @@ print('model.r2: ', model.score(x_test, y_test))
 print('best_r2: ', model.best_score_)
 
 print('걸린시간:', round(end - start, 2), '초')
+"""
+Fitting 5 folds for each of 42 candidates, totalling 210 fits
+최적의 매개변수:  XGBRegressor(base_score=None, booster=None, callbacks=None,
+             colsample_bylevel=None, colsample_bynode=None,
+             colsample_bytree=None, device=None, early_stopping_rounds=None,
+             enable_categorical=False, eval_metric=None, feature_types=None,
+             feature_weights=None, gamma=None, grow_policy=None,
+             importance_type=None, interaction_constraints=None,
+             learning_rate=0.01, max_bin=None, max_cat_threshold=None,
+             max_cat_to_onehot=None, max_delta_step=None, max_depth=None,
+             max_leaves=None, min_child_weight=10, missing=nan,
+             monotone_constraints=None, multi_strategy=None, n_estimators=None,
+             n_jobs=None, num_parallel_tree=None, ...)
+최적의 파라미터:  {'learning_rate': 0.01, 'min_child_weight': 10}
+model.r2:  0.35203541143453265
+best_r2:  0.37628718516426146
+걸린시간: 10.45 초
+"""

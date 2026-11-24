@@ -23,3 +23,6 @@ claude.md
 .env
 python_pkg
 python
+
+# CatBoost 학습 로그
+catboost_info/
